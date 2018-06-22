@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 import socket
 import time
+import ssl
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+ircsock = ssl.wrap_socket(ircsock, ssl_version=ssl.PROTOCOL_TLSv1_2, ciphers="DHE-RSA-AES256-GCM-SHA384")
 server = "chat.freenode.net" # Server
 channel = "##SRM-OSC" # Channel
 botnick = "PhoenixbotSRM" # Name of the bot(I guess Phoenix is a registered nick)
-adminname = "SPYR4D4R" # Not actually required
+adminname = ["SPYR4D4R", "toxicmender"] # Not actually required
 exitcode = "bye " + botnick
 
-ircsock.connect((server, 6667)) # SSL Port 6697
+ircsock.connect((server, 6697)) # SSL Port 6697
 ircsock.send(bytes("USER " + botnick + " " + botnick + " " + botnick + " " + botnick + "\n", "UTF-8"))
 ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
 
@@ -48,7 +50,7 @@ def main():
                         target = name
                         message = "Could not parse. Use .tell <target> <message>"
                     sendmsg(target + " : " + name + " says " + message)
-            if name.lower() == adminname.lower() and message.rstrip() == exitcode:
+            if name.lower() in [a.lower() for a in adminname] and message.rstrip() == exitcode:
                 sendmsg("oh...okay. :'(")
                 ircsock.send(bytes("QUIT \n", "UTF-8"))
                 return
