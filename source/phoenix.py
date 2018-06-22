@@ -5,7 +5,7 @@ import time
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "chat.freenode.net" # Server
 channel = "##SRM-OSC" # Channel
-botnick = "PhoenixbotSRM" # Name of out bot(I guess Phoenix is a registered nick)
+botnick = "PhoenixbotSRM" # Name of the bot(I guess Phoenix is a registered nick)
 adminname = "SPYR4D4R" # Not actually required
 exitcode = "bye " + botnick
 
