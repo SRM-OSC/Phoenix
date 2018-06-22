@@ -5,22 +5,17 @@ import time
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server = "chat.freenode.net" # Server
 channel = "##SRM-OSC" # Channel
-botnick = "Phoenixbot" # Name of out bot(I guess Phoenix is a registered nick)
+botnick = "PhoenixbotSRM" # Name of out bot(I guess Phoenix is a registered nick)
 adminname = "SPYR4D4R" # Not actually required
 exitcode = "bye " + botnick
 
-ircsock.connect((server, 6697)) # SSL Port 6697
+ircsock.connect((server, 6667)) # SSL Port 6697
 ircsock.send(bytes("USER " + botnick + " " + botnick + " " + botnick + " " + botnick + "\n", "UTF-8"))
 ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
 
 # join channel(s)
 def joinchan(chan):
     ircsock.send(bytes("JOIN " + chan + "\n", "UTF-8"))
-    ircmsg = ""
-    while ircmsg.find("End of /NAMES list.") == -1:
-        ircmsg = ircsock.recv(2048).decode("UTF-8")
-        ircmsg - ircsock.strip('\n\r')
-        print(ircmsg)
 
 # respond to server Pings.
 def ping():
@@ -52,7 +47,7 @@ def main():
                     else:
                         target = name
                         message = "Could not parse. Use .tell <target> <message>"
-                    sendmsg(message, target)
+                    sendmsg(target + " : " + name + " says " + message)
             if name.lower() == adminname.lower() and message.rstrip() == exitcode:
                 sendmsg("oh...okay. :'(")
                 ircsock.send(bytes("QUIT \n", "UTF-8"))
