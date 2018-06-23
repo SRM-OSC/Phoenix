@@ -1,19 +1,38 @@
 #!/usr/bin/env python3
-import socket
-import time
-import ssl
+import sys, socket, ssl, hashlib, getpass
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ircsock = ssl.wrap_socket(ircsock, ssl_version=ssl.PROTOCOL_TLSv1_2, ciphers="DHE-RSA-AES256-GCM-SHA384")
 server = "chat.freenode.net" # Server
 channel = "##SRM-OSC" # Channel
-botnick = "PhoenixbotSRM" # Name of the bot(I guess Phoenix is a registered nick)
-adminname = ["SPYR4D4R", "toxicmender"] # Not actually required
+botnick = "PhoenixSRM"
+adminname = ["SPYR4D4R", "toxicmender"] # Admins that can shutdown the bot
 exitcode = "bye " + botnick
 
+# Get the bot password from user, only admins know this password
+# Password is required to verify the botnick
+md5_pass = ""
+password = ""
+attempt = 0
+while attempt < 3 and md5_pass != "0526247a6e1674fc61bb70d28688b908":
+    try:
+        password = getpass.getpass(f"\n Enter Bot Password [Attempt: {attempt + 1}/3]: ")
+        md5_pass = str(hashlib.md5(password.encode("utf-8")).hexdigest())
+        attempt += 1
+    except:
+        print("\n Failed to get correct password. Exiting...")
+        sys.exit(0)
+if md5_pass == "0526247a6e1674fc61bb70d28688b908":
+    print("\n Password verified. Connecting to Freenode IRC")
+else:
+    print("\n Incorrect password. Exiting...")
+    sys.exit(0)
+
+# Start connection to Freenode IRC
 ircsock.connect((server, 6697)) # SSL Port 6697
 ircsock.send(bytes("USER " + botnick + " " + botnick + " " + botnick + " " + botnick + "\n", "UTF-8"))
 ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
+ircsock.send(bytes("NickServ IDENTIFY " + password + "\n", "UTF-8"))
 
 # join channel(s)
 def joinchan(chan):
@@ -58,4 +77,8 @@ def main():
             if ircmsg.find("PING :") != -1:
                 ping()
 
-main()
+try:
+    main()
+except KeyboardInterrupt:
+    sendmsg("oops my computer went down... *_*")
+    sys.exit(0)
