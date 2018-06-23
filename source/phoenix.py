@@ -2,12 +2,13 @@
 import sys, socket, ssl, hashlib, getpass, time
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ircsock = ssl.wrap_socket(ircsock, ssl_version=ssl.PROTOCOL_TLSv1_2, ciphers="DHE-RSA-AES256-GCM-SHA384")
+ircsock = ssl.wrap_socket(ircsock, ssl_version=ssl.PROTOCOL_TLSv1_2, ciphers="DHE-RSA-AES256-GCM-SHA384") # alternate ciphers ECDHE-RSA-AES256-GCM-SHA384
 server = "chat.freenode.net" # Server
 channel = "##SRM-OSC" # Channel
 botnick = "PhoenixSRM"
 adminname = ["SPYR4D4R", "toxicmender"] # Admins that can shutdown the bot
-exitcode = "bye " + botnick
+greetings = ["hi", "hello", "yo", "hey", "hiya", "g'day"]
+valedictions = ["bye", "goodbye", "gtfo", "ciao"]
 
 # Get the bot password from user, only admins know this password
 # Password is required to verify the botnick
@@ -74,7 +75,7 @@ def help(target, topic="all"):
     ["/list", ["+ Lists all the channels on the current network."]],
     ["/nick nickname", ["+ Changes your nick."]],
     ["/names #channel", ["+ Shows the nicks of all users on #channel."]],
-    ["/msg nickname message", ["+ Sends a private messafe to a user."]],
+    ["/msg nickname message", ["+ Sends a private message to a user."]],
     ["/query nickname message", ["+ Sends a private message to a user and opens a private chat window."]],
     ["/me action", ["+ Prints 'yourname action'."]],
     ["/notice nickname message", ["+ Sends a notice to the specified user.", "+ Like /msg, but usually with sound."]],
@@ -90,7 +91,7 @@ def help(target, topic="all"):
     ["/nickserv set password yournewpassword", ["+ Changes your password."]]]
 
     if topic == "all":
-        messagelist = syntax + basics + nick
+        messagelist = basics + nick
         nester(messagelist, delay=2)
     elif topic == "basics":
         nester(basics, delay=2)
@@ -111,8 +112,8 @@ def main():
             message = ircmsg.split('PRIVMSG', 1)[1].split(':', 1)[1]
 
             if len(name) < 17:
-                if message.find('Hi ' + botnick) != -1:
-                    sendmsg("Hello " + name + "!")
+                if message.split()[0].lower() in greetings:
+                    sendmsg(message.split()[0] + " " + name + "!")
                 if message == ".help":
                     help(target=name)
                 elif message[:5].find('.help') != -1:
@@ -133,7 +134,7 @@ def main():
                         target = name
                         message = "Could not parse. Use .tell <target> <message>"
                     sendmsg(target + " : " + name + " says " + message)
-            if name.lower() in [a.lower() for a in adminname] and message.rstrip() == exitcode:
+            if name.lower() in [a.lower() for a in adminname] and message.split()[0].lower() in valedictions and message.split()[1] == botnick:
                 sendmsg("oh...okay. :'(")
                 ircsock.send(bytes("QUIT \n", "UTF-8"))
                 return
