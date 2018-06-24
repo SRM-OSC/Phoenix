@@ -63,7 +63,7 @@ def help(target, topic="all"):
 
     # syntax flag is for wrong syntax
     syntax = ["Wrong Syntax",
-    ["-> Use .help basics", "-> Use .help nick"]]
+    ["-> Use .help all", "-> Use .help basics", "-> Use .help nick"]]
 
     # basic flag for basic commands
     basics = ["## The Basics",
@@ -100,6 +100,9 @@ def help(target, topic="all"):
     else:
         nester(syntax)
 
+# Dictionary storing keyword as key & function object as value
+plugins = {".help": help}
+
 def main():
     joinchan(channel)
     while 1:
@@ -114,17 +117,9 @@ def main():
             if len(name) < 17:
                 if message.split()[0].lower() in greetings:
                     sendmsg(message.split()[0] + " " + name + "!")
-                if message == ".help":
-                    help(target=name)
-                elif message[:5].find('.help') != -1:
-                    if message.find(' ') != -1:
-                        topic = message.split(' ', 1)[1].rstrip()
-                        if topic in ["all", "basics", "nick"]:
-                            help(name, topic)
-                        else:
-                            help(channel, "syntax")
-                    else:
-                        help(channel, "syntax")
+                if message.split()[0] in plugins.keys():
+                    arguments = " ".join(message.split()[1:])
+                    plugins[message.split()[0]](name, arguments)
                 elif message[:5].find('.tell') != -1:
                     target = message.split(' ', 1)[1]
                     if target.find(' ') != -1:
