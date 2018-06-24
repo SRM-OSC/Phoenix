@@ -45,6 +45,7 @@ def ping():
 
 # sends messages to the target.
 def sendmsg(msg, target=channel):
+    print(f"PhoenixSRM: PRIVMSG {target} :{msg}")
     ircsock.send(bytes("PRIVMSG " + target + " :" + msg + "\n", "UTF-8"))
 
 # sends help info as a private message to the user
