@@ -38,8 +38,9 @@ https://www.python.org/downloads/
 
 ## Authors
 
-* **Shashank Singh** - *Coder* - [shashank9830](https://github.com/shashank9830)
-* **Danish Parvez**  - *Coder* - [toxicmender](https://github.com/toxicmender)
+* **Shashank Singh** - [shashank9830](https://github.com/shashank9830)
+* **Danish Parvez**  - [toxicmender](https://github.com/toxicmender)
+
 See also the list of [contributors](https://github.com/SRM-OSC/Phoenix/contributors) who participated in this project.
 
 ## License
