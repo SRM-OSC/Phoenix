@@ -116,7 +116,7 @@ def main():
             message = ircmsg.split('PRIVMSG', 1)[1].split(':', 1)[1]
 
             if len(name) < 17:
-                if message.split()[0].lower() in greetings and message.split()[1].rstrip() == "PhoenixSRM":
+                if message.split()[0].lower() in greetings and message.split()[1].rstrip() == botnick:
                     sendmsg(message.split()[0] + " " + name + "!")
                 if message.split()[0] in plugins.keys():
                     arguments = " ".join(message.split()[1:])
