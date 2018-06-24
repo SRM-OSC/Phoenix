@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 import sys, socket, ssl, hashlib, getpass, time
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -31,13 +31,13 @@ else:
 
 # Start connection to Freenode IRC
 ircsock.connect((server, 6697)) # SSL Port 6697
-ircsock.send(bytes("USER " + botnick + " " + botnick + " " + botnick + " " + botnick + "\n", "UTF-8"))
-ircsock.send(bytes("NICK " + botnick + "\n", "UTF-8"))
-ircsock.send(bytes("NickServ IDENTIFY " + password + "\n", "UTF-8"))
+ircsock.send(bytes(f"USER {botnick} {botnick} {botnick} {botnick}\n", "UTF-8"))
+ircsock.send(bytes(f"NICK {botnick}\n", "UTF-8"))
+ircsock.send(bytes(f"NickServ IDENTIFY {password}\n", "UTF-8"))
 
 # join channel(s)
 def joinchan(chan):
-    ircsock.send(bytes("JOIN " + chan + "\n", "UTF-8"))
+    ircsock.send(bytes(f"JOIN {chan}\n", "UTF-8"))
 
 # respond to server Pings.
 def ping():
@@ -46,7 +46,7 @@ def ping():
 # sends messages to the target.
 def sendmsg(msg, target=channel):
     print(f"PhoenixSRM: PRIVMSG {target} :{msg}")
-    ircsock.send(bytes("PRIVMSG " + target + " :" + msg + "\n", "UTF-8"))
+    ircsock.send(bytes(f"PRIVMSG {target} :{msg}\n", "UTF-8"))
 
 # sends help info as a private message to the user
 def help(target, topic="all"):
