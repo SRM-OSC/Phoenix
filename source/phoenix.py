@@ -64,7 +64,7 @@ def help(target, topic="all"):
 
     # syntax flag is for wrong syntax
     syntax = ["Wrong Syntax",
-    ["-> Use .help all", "-> Use .help basics", "-> Use .help nick"]]
+    ["-> Use .help all or .help (For everything)", "-> Use .help basics (For Basic IRC Commands)", "-> Use .help nick (For Nick Management)"]]
 
     # basic flag for basic commands
     basics = ["## The Basics",
@@ -93,16 +93,27 @@ def help(target, topic="all"):
 
     if topic == "all":
         messagelist = basics + nick
-        nester(messagelist, delay=2)
+        nester(messagelist, delay=1) # delay tested at 1 s
     elif topic == "basics":
-        nester(basics, delay=2)
+        nester(basics, delay=1) # delay tested at 1 s
     elif topic == "nick":
-        nester(nick, delay=1)
+        nester(nick, delay=0.5) # delay tested at 0.5 s
     else:
         nester(syntax)
 
+# .tell function
+def tell(name, t_message="invalid"):
+    if t_message.find(' ') != -1:
+        message = t_message.split(' ', 1)[1]
+        target = t_message.split(' ', 1)[0]
+        sendmsg(f"{target} : {name} says {message}")
+    else:
+        target = name
+        message = "Could not parse. Use .tell <target> <message>"
+        sendmsg(message)
+
 # Dictionary storing keyword as key & function object as value
-plugins = {".help": help}
+plugins = {".help": help, ".tell": tell}
 
 def main():
     joinchan(channel)
@@ -116,20 +127,14 @@ def main():
             message = ircmsg.split('PRIVMSG', 1)[1].split(':', 1)[1]
 
             if len(name) < 17:
-                if message.split()[0].lower() in greetings and message.split()[1].rstrip() == botnick:
-                    sendmsg(message.split()[0] + " " + name + "!")
-                if message.split()[0] in plugins.keys():
-                    arguments = " ".join(message.split()[1:])
-                    plugins[message.split()[0]](name, arguments)
-                elif message[:5].find('.tell') != -1:
-                    target = message.split(' ', 1)[1]
-                    if target.find(' ') != -1:
-                        message = target.split(' ', 1)[1]
-                        target = target.split(' ')[0]
-                    else:
-                        target = name
-                        message = "Could not parse. Use .tell <target> <message>"
-                    sendmsg(target + " : " + name + " says " + message)
+                if message.find(' ') != -1:
+                    if message.split(' ', 1)[0].lower() in greetings and message.split(' ', 1)[1].rstrip() == botnick:
+                        sendmsg(message.split(' ', 1)[0] + " " + name + "!")
+                    elif message.split(' ', 1)[0] in plugins.keys():
+                        arguments = message.split(' ', 1)[1].rstrip()
+                        plugins[message.split(' ', 1)[0]](name, arguments)
+                elif message.rstrip() in plugins.keys():
+                    plugins[message.rstrip()](name)
             if name.lower() in [a.lower() for a in adminname] and message.split()[0].lower() in valedictions and message.split()[1] == botnick:
                 sendmsg("oh...okay. :'(")
                 ircsock.send(bytes("QUIT \n", "UTF-8"))
