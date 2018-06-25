@@ -127,17 +127,20 @@ def main():
 
             if len(name) < 17:
                 if message.find(' ') != -1:
+                    # check for greetings
                     if message.split(' ', 1)[0].lower() in greetings and message.split(' ', 1)[1].rstrip() == botnick:
                         sendmsg(message.split(' ', 1)[0] + " " + name + "!")
+                    # check for valediction from an admin
+                    elif name in adminname and message.split(' ', 1)[0].lower() in valedictions and message.split(' ', 1)[1].rstrip() == botnick:
+                        sendmsg("oh...okay. :'('")
+                        ircsock.send(bytes("QUIT \n", "UTF-8"))
+                        sys.exit(0)
+                    # check for a valid command
                     elif message.split(' ', 1)[0] in plugins.keys():
                         arguments = message.split(' ', 1)[1].rstrip()
                         plugins[message.split(' ', 1)[0]](name, arguments)
                 elif message.rstrip() in plugins.keys():
                     plugins[message.rstrip()](name)
-            if name.lower() in [a.lower() for a in adminname] and message.split()[0].lower() in valedictions and message.split()[1] == botnick:
-                sendmsg("oh...okay. :'(")
-                ircsock.send(bytes("QUIT \n", "UTF-8"))
-                return
         else:
             if ircmsg.find("PING :") != -1:
                 ping()
