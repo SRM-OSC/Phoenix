@@ -108,7 +108,6 @@ def tell(name, t_message="invalid"):
         target = t_message.split(' ', 1)[0]
         sendmsg(f"{target} : {name} says {message}")
     else:
-        target = name
         message = "Could not parse. Use .tell <target> <message>"
         sendmsg(message)
 
