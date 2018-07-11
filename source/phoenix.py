@@ -208,7 +208,7 @@ def main():
                         plugins[message.split(' ', 1)[0]](name, arguments)
                 elif message.rstrip() in plugins.keys():
                     plugins[message.rstrip()](name)
-        elif ircmsg.find("JOIN") != -1:
+        elif ircmsg.find("JOIN") != -1 and ircmsg.find(botnick) == -1:
             name = ircmsg.split('!', 1)[0][1:]
             #message = ircmsg.split(channel, 1)[1].split(':', 1)[1]
             if name.lower() != "chanserv" and name.lower() != botnick:
