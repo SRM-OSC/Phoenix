@@ -29,4 +29,3 @@ print(data)
 
 with open("ascii.json", "w") as f:
     json.dump(data, f, ensure_ascii=False, separators=(", " , ": "))
-
