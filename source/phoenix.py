@@ -4,7 +4,7 @@ import socket
 import ssl
 import hashlib
 import getpass
-import time
+import traceback
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # alternate ciphers ECDHE-RSA-AES256-GCM-SHA384
@@ -222,4 +222,10 @@ try:
     main()
 except KeyboardInterrupt:
     sendmsg("oops my computer went down... *_*")
+except Exception:
+    sendmsg("*_* admins please check... something's wrong")
+    print("\n> START OF TRACEBACK\n")
+    print(traceback.format_exc())
+    print("> END OF TRACEBACK\n")
+finally:
     sys.exit(0)
