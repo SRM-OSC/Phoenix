@@ -5,6 +5,7 @@ import ssl
 import hashlib
 import getpass
 import traceback
+import time
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # alternate ciphers ECDHE-RSA-AES256-GCM-SHA384
@@ -85,8 +86,7 @@ def help(target, topic="all"):
             if isinstance(each_message, list):
                 nester(each_message, level+1, delay)
             else:
-                for tabs in range(level):
-                    each_message = "\t" + each_message
+                each_message = "\t"*level + each_message
                 time.sleep(delay)
                 sendmsg(each_message, target)
 
