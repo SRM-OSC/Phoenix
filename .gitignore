@@ -156,3 +156,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# hidden.py file
+# it has a variable named md5Pass of type <str>
+# md5Pass = '<enter md5 hash of bot's IRC password here>'
+source/hidden.py
