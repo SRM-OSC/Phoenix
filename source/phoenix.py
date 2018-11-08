@@ -6,6 +6,7 @@ import hashlib
 import getpass
 import traceback
 import time
+import hidden # hidden.py contains md5 password
 
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # alternate ciphers ECDHE-RSA-AES256-GCM-SHA384
@@ -23,7 +24,7 @@ valedictions = ["bye", "goodbye", "gtfo", "ciao"]
 md5_pass = ""
 password = ""
 attempt = 0
-while attempt < 3 and md5_pass != "0526247a6e1674fc61bb70d28688b908":
+while attempt < 3 and md5_pass != hidden.md5Pass:
     try:
         password = getpass.getpass(
             f"\n Enter Bot Password [Attempt: {attempt + 1}/3]: ")
@@ -32,7 +33,7 @@ while attempt < 3 and md5_pass != "0526247a6e1674fc61bb70d28688b908":
     except:
         print("\n Failed to get correct password. Exiting...")
         sys.exit(0)
-if md5_pass == "0526247a6e1674fc61bb70d28688b908":
+if md5_pass == hidden.md5Pass:
     print("\n Password verified. Connecting to Freenode IRC")
 else:
     print("\n Incorrect password. Exiting...")
